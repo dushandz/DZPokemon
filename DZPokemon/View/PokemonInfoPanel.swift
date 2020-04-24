@@ -11,8 +11,12 @@ import UIKit
 
 struct BlurView: UIViewRepresentable {
     let style: UIBlurEffect.Style
+    let view: UIView
+
     
-    func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
+    init(style: UIBlurEffect.Style) {
+        print("init")
+        self.style = style
         
         let view = UIView(frame: .zero)
         view.backgroundColor = .clear
@@ -25,11 +29,26 @@ struct BlurView: UIViewRepresentable {
             blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
             blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
-        return view
+        self.view = view
+    }
+    
+    func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
+        print("makeUIView")
+        return self.view
     }
     
     func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<BlurView>) {
-        
+        print("updateUIView")
+        view.viewWithTag(1000)?.removeFromSuperview()
+        let blurEffect = UIBlurEffect(style: style)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        blurView.tag = 1000
+        view.addSubview(blurView)
+        NSLayoutConstraint.activate([
+            blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
+            blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        ])
     }
 }
 
@@ -46,19 +65,24 @@ extension View {
 
 
 struct PokemonInfoPanel: View {
+    @State var darkBlur = false
+    
     let model: PokemonViewModel
     var abilities: [AbilityViewModel] {
         AbilityViewModel.sample(pokemonID: model.id)
     }
     var body: some View {
         VStack(spacing: 20) {
+            Button("切换模糊效果") {
+                self.darkBlur.toggle()
+            }
             topIndicator
             Header(model: model)
             pokemonDescription
             AbilityList(model: model, abilityModels: abilities)
         }
         .padding(EdgeInsets(top: 12, leading: 30, bottom: 30, trailing: 30))
-        .blurBackground(style: .systemMaterial).cornerRadius(20).fixedSize(horizontal: false, vertical: true)
+        .blurBackground(style:darkBlur ? .systemMaterialDark : .systemMaterial).cornerRadius(20).fixedSize(horizontal: false, vertical: true)
     }
     
     

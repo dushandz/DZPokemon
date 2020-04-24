@@ -9,6 +9,17 @@
 import SwiftUI
 import Combine
 
+
+struct SettingRootView: View {
+    var body: some View {
+        NavigationView {
+            SettingView().navigationBarTitle("设置")
+        }
+    }
+}
+
+
+
 struct SettingView: View {
     @ObservedObject var settings = Settings()
     
@@ -67,6 +78,6 @@ struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView()
+        SettingRootView()
     }
 }
