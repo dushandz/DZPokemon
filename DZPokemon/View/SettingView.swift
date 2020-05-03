@@ -53,7 +53,7 @@ struct SettingView: View {
             } else {
                 Text(settings.user!.email)
                 Button("注销") {
-                    print("注销")
+                    self.store.dispatch(.logout)
                 }
             }
             
@@ -62,9 +62,17 @@ struct SettingView: View {
                 SecureField("确认密码",text: settingsBinding.verifyPassword)
 
             }
-            Button(settings.accountBehavior.text) {
-                self.store.dispatch(.login(self.settings.email, password: self.settings.password))
+            
+            if settings.isRequestLogin == true {
+                Text("登录中....")
             }
+            
+            if settings.user == nil && settings.accountBehavior == .login {
+                Button(settings.accountBehavior.text) {
+                    self.store.dispatch(.login(self.settings.email, password: self.settings.password))
+                }
+            }
+
         }
         
     }

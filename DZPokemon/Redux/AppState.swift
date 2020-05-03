@@ -32,6 +32,7 @@ extension AppState {
         var email = ""
         var password = ""
         var verifyPassword = ""
+        var isRequestLogin = false
         
         var user: User?
     }
@@ -65,4 +66,18 @@ struct User: Codable {
         favoritePokemonIDSet.contains(id)
     }
     
+}
+
+
+enum AppError: Error, Identifiable {
+    var id: String  { localizedDescription }
+    case pwdErr
+}
+
+extension AppError {
+    var localizedDescription: String {
+        switch self {
+        case .pwdErr: return "密码错误"
+        }
+    }
 }
