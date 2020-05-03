@@ -10,44 +10,41 @@ import SwiftUI
 import UIKit
 
 struct BlurView: UIViewRepresentable {
-    let style: UIBlurEffect.Style
-    let view: UIView
-
+    let blurEffect: UIBlurEffect
     
     init(style: UIBlurEffect.Style) {
         print("init")
-        self.style = style
-        
-        let view = UIView(frame: .zero)
-        view.backgroundColor = .clear
-        
-        let blurEffect = UIBlurEffect(style: style)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurView)
-        NSLayoutConstraint.activate([
-            blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
-            blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
-        ])
-        self.view = view
+        self.blurEffect = UIBlurEffect(style: style)
     }
     
     func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
         print("makeUIView")
-        return self.view
+        
+        let view = UIView(frame: .zero)
+        view.backgroundColor = .clear
+        
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.tag = 1000
+        
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(blurView, constraints: [
+            equal(\.heightAnchor),
+            equal(\.widthAnchor)
+        ])
+        return view
     }
     
-    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<BlurView>) {
+    func updateUIView(_ view: UIView, context: UIViewRepresentableContext<BlurView>) {
         print("updateUIView")
         view.viewWithTag(1000)?.removeFromSuperview()
-        let blurEffect = UIBlurEffect(style: style)
+        
         let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
         blurView.tag = 1000
-        view.addSubview(blurView)
-        NSLayoutConstraint.activate([
-            blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
-            blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
+        
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(blurView, constraints: [
+            equal(\.heightAnchor),
+            equal(\.widthAnchor)
         ])
     }
 }

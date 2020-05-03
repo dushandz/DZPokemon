@@ -21,7 +21,15 @@ struct SettingRootView: View {
 
 
 struct SettingView: View {
-    @ObservedObject var settings = Settings()
+    @EnvironmentObject var store: Store
+    
+    var settingsBinding: Binding<AppState.Settings> {
+        $store.appSate.setting
+    }
+    
+    var settings: AppState.Settings {
+        store.appSate.setting
+    }
     
     var body: some View {
         Form {
@@ -33,34 +41,41 @@ struct SettingView: View {
     
     var accountSection: some View {
         Section(header: Text("账户")) {
-            Picker(selection: $settings.accountBehavior, label: Text("")) {
-                ForEach(Settings.AccountBehavior.allCases, id: \.self) {
+            Picker(selection: settingsBinding.accountBehavior, label: Text("")) {
+                ForEach(AppState.Settings.AccountBehavior.allCases, id: \.self) {
                     Text($0.text)
                 }
+            }.pickerStyle(SegmentedPickerStyle())
+            
+            if settings.user == nil {
+                TextField("电子邮箱",text: settingsBinding.email)
+                TextField("密码", text: settingsBinding.password)
+            } else {
+                Text(settings.user!.email)
+                Button("注销") {
+                    print("注销")
+                }
             }
-            .pickerStyle(SegmentedPickerStyle())
             
-            TextField("电子邮箱",text: $settings.email)
-            TextField("密码", text: $settings.password)
-            
+
             if settings.accountBehavior == .register {
-                SecureField("确认密码",text: $settings.verifyPassword)
+                SecureField("确认密码",text: settingsBinding.verifyPassword)
+
             }
-            
             Button(settings.accountBehavior.text) {
-                print("登录/注册")
+                self.store.dispatch(.login(self.settings.email, password: self.settings.password))
             }
         }
+        
     }
-    
     
     var optionSection: some View {
         Section(header: Text("选项")) {
-            Toggle(isOn: $settings.showEnglishName) {
+            Toggle(isOn: settingsBinding.showEnglishName) {
                 Text("显示英文名")
             }
             
-            Toggle(isOn: $settings.showFavoriteOnly) {
+            Toggle(isOn: settingsBinding.showFavoriteOnly) {
                 Text("只显示收藏")
             }
         }
@@ -78,6 +93,6 @@ struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingRootView()
+        SettingRootView().environmentObject(Store())
     }
 }

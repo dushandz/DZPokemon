@@ -10,7 +10,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        PokemonListView()
+        TabView {
+            PokemonRootView().tabItem {
+                Image(systemName: "list.bullet.below.rectangle")
+                Text("列表")
+            }
+            
+            SettingRootView().tabItem {
+                Image(systemName: "gear")
+                Text("设置")
+            }
+        }
     }
 }
 
@@ -19,30 +29,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
-struct PokemonListView: View {
-    @State var expanedInex: Int?
-    var body: some View {
-        ScrollView {
-            ForEach(PokemonViewModel.all) { pokemon in
-                PokemonInfoRow(model: pokemon, expanded: self.expanedInex == pokemon.id)
-                    .onTapGesture {
-                        withAnimation(.spring(response: 0.55, dampingFraction: 0.425, blendDuration: 0)) {
-                            if self.expanedInex == pokemon.id {
-                                self.expanedInex = nil
-                            } else {
-                                self.expanedInex = pokemon.id
-                            }
-                        }
-                }
-            }
-        }.overlay(
-            VStack{
-                Spacer()
-                PokemonInfoPanel(model: .sample(id: 1))
-            }.edgesIgnoringSafeArea(.bottom)
-        )
-    }
-
-}
-
