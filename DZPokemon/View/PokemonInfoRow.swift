@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct PokemonInfoRow: View {
+    @EnvironmentObject var store: Store
+
     var model: PokemonViewModel
     var expanded:Bool
     var body: some View {
@@ -38,7 +40,10 @@ struct PokemonInfoRow: View {
                         .modifier(ToolButtonModifer())
 
                 }
-                Button(action:{}) {
+                Button(action: {
+                    let target = !self.store.appState.pokemonList.selectionState.panelPresented
+                    self.store.dispatch(.togglePanelPresenting(presenting: target))
+                }) {
                     Image(systemName: "chart.bar")
                         .modifier(ToolButtonModifer())
 

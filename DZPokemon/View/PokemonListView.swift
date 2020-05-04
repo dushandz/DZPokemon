@@ -13,7 +13,7 @@ struct PokemonRootView: View {
     @EnvironmentObject var store: Store
     var body: some View {
         NavigationView {
-            if store.appSate.pokemonList.pokemons == nil {
+            if store.appState.pokemonList.pokemons == nil {
                 Text("Loading...").onAppear {
                     self.store.dispatch(.loadPokemons)
                 }
@@ -27,33 +27,29 @@ struct PokemonRootView: View {
 struct PokemonListView: View {
     @EnvironmentObject var store: Store
     
-    var expanedInex: Int? {
-        store.appSate.pokemonList.expanedInex
+    var expanedIndex: Int? {
+        store.appState.pokemonList.selectionState.expandingIndex
     }
     
     var searchText: Binding<String> {
-        $store.appSate.pokemonList.searchText
+        $store.appState.pokemonList.searchText
     }
     
     var body: some View {
         ScrollView {
-            TextField("请输入", text: searchText)
-            ForEach(store.appSate.pokemonList.allPokemonsByID) { pokemon in
-                PokemonInfoRow(model: pokemon, expanded: self.expanedInex == pokemon.id)
+            ForEach(store.appState.pokemonList.allPokemonsByID) { pokemon in
+                PokemonInfoRow(model: pokemon, expanded: self.expanedIndex == pokemon.id)
                     .onTapGesture {
                         withAnimation(.spring(response: 0.55, dampingFraction: 0.425, blendDuration: 0)) {
                             self.store.dispatch(.toggleListSelection(idx: pokemon.id))
-                            self.store.dispatch(.loadPokemonAbility(pokemon: pokemon.pokemon))
                         }
+                        self.store.dispatch(.loadPokemonAbility(pokemon: pokemon.pokemon))
+
                 }
             }
+            Spacer()
+                .frame(height: 8)
         }
-//        .overlay(
-//            VStack{
-//                Spacer()
-//                PokemonInfoPanel(model: .sample(id: 1))
-//            }.edgesIgnoringSafeArea(.bottom)
-//        )
     }
 
 }

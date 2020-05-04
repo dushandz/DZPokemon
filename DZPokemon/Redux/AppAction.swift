@@ -21,4 +21,6 @@ enum AppAction {
     case toggleListSelection(idx: Int?)
     case loadPokemonAbility(pokemon: Pokemon)
     case loadPokemonAbilityDone(res: Result<[AbilityViewModel], AppError>)
+    case togglePanelPresenting(presenting: Bool)
+
 }

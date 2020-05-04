@@ -10,22 +10,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        TabView {
-            PokemonRootView().tabItem {
-                Image(systemName: "list.bullet.below.rectangle")
-                Text("列表")
-            }
-            
-            SettingRootView().tabItem {
-                Image(systemName: "gear")
-                Text("设置")
-            }
-        }
+        MainTab()
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView().environmentObject(Store())
     }
 }

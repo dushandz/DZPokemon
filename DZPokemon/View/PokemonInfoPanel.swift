@@ -9,43 +9,25 @@
 import SwiftUI
 import UIKit
 
-struct BlurView: UIViewRepresentable {
-    let blurEffect: UIBlurEffect
-    
-    init(style: UIBlurEffect.Style) {
-        print("init")
-        self.blurEffect = UIBlurEffect(style: style)
-    }
-    
+struct BlurView : UIViewRepresentable {
+    let style: UIBlurEffect.Style
+
     func makeUIView(context: UIViewRepresentableContext<BlurView>) -> UIView {
-        print("makeUIView")
-        
         let view = UIView(frame: .zero)
         view.backgroundColor = .clear
-        
+        let blurEffect = UIBlurEffect(style: style)
         let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.tag = 1000
-        
+
         blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurView, constraints: [
-            equal(\.heightAnchor),
-            equal(\.widthAnchor)
+        view.addSubview(blurView)
+        NSLayoutConstraint.activate([
+            blurView.heightAnchor.constraint(equalTo: view.heightAnchor),
+            blurView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
         return view
     }
-    
-    func updateUIView(_ view: UIView, context: UIViewRepresentableContext<BlurView>) {
-        print("updateUIView")
-        view.viewWithTag(1000)?.removeFromSuperview()
-        
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.tag = 1000
-        
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(blurView, constraints: [
-            equal(\.heightAnchor),
-            equal(\.widthAnchor)
-        ])
+
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<BlurView>) {
     }
 }
 
@@ -60,26 +42,26 @@ extension View {
 
 
 
-
 struct PokemonInfoPanel: View {
-    @State var darkBlur = false
+    
+    @EnvironmentObject var store: Store
+    
+    @Environment(\.colorScheme) var colorScheme
     
     let model: PokemonViewModel
-    var abilities: [AbilityViewModel] {
-        AbilityViewModel.sample(pokemonID: model.id)
+    var abilities: [AbilityViewModel]? {
+         store.appState.pokemonList.abilityViewModels(for: model.pokemon)
     }
+    
     var body: some View {
         VStack(spacing: 20) {
-            Button("切换模糊效果") {
-                self.darkBlur.toggle()
-            }
             topIndicator
             Header(model: model)
             pokemonDescription
             AbilityList(model: model, abilityModels: abilities)
         }
         .padding(EdgeInsets(top: 12, leading: 30, bottom: 30, trailing: 30))
-        .blurBackground(style:darkBlur ? .systemMaterialDark : .systemMaterial).cornerRadius(20).fixedSize(horizontal: false, vertical: true)
+        .blurBackground(style:.systemMaterial).cornerRadius(20).fixedSize(horizontal: false, vertical: true)
     }
     
     
@@ -93,7 +75,9 @@ struct PokemonInfoPanel: View {
         VStack {
             Text(model.descriptionText)
                 .font(.callout)
-                .foregroundColor(Color(hex: 0x666666))
+                .foregroundColor(
+                    colorScheme == .light ? Color(hex: 0x666666) : Color(hex: 0xAAAAAA)
+                )
                 .fixedSize(horizontal: false, vertical: true)
             Color(hex: 0xAAAAAA).frame(height: 1)
         }
@@ -219,6 +203,6 @@ extension PokemonInfoPanel {
 
 struct PokemonInfoPanel_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonInfoPanel(model: PokemonViewModel.sample(id: 1))
+        PokemonInfoPanel(model: PokemonViewModel.sample(id: 1)).environmentObject(Store())
     }
 }

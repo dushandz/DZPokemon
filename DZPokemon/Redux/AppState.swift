@@ -92,13 +92,29 @@ extension AppState {
 
 extension AppState {
     struct PokemonList {
+        
+        struct SelectionState {
+            var expandingIndex: Int? = nil
+            var panelIndex: Int? = nil
+            var panelPresented = false
+            var radarProgress: Double = 0
+            var radarShouldAnimate = true
+
+            func isExpanding(_ id: Int) -> Bool {
+                expandingIndex == id
+            }
+        }
+        
+        var selectionState = SelectionState()
+
+        
         @FileStorage(directory: .documentDirectory, fileName: "pokemons.json")
         var pokemons: [Int : PokemonViewModel]?
         
         @FileStorage(directory: .documentDirectory, fileName: "abilities.json")
         var abilities: [Int : AbilityViewModel]?
         
-        var expanedInex: Int?
+        var expanedIndex: Int?
         var isLoading = false
         var searchText = ""
         
@@ -109,11 +125,11 @@ extension AppState {
             return pokemons.sorted{ $0.id < $1.id }
         }
         
-        func abilityViewModels(for pokemon: Pokemon) -> AbilityViewModel? {
+        func abilityViewModels(for pokemon: Pokemon) -> [AbilityViewModel]? {
             guard let abilities = abilities else {
                 return nil
             }
-            return abilities[pokemon.id]
+            return pokemon.abilities.compactMap { abilities[$0.ability.url.extractedID!] }
         }
         
     }
@@ -153,7 +169,8 @@ struct User: Codable {
 
 enum AppError: Error, Identifiable {
     var id: String  { localizedDescription }
-    case pwdErr, netErr(Error), userNotFounds, registerFailed
+    case pwdErr, netErr(Error), userNotFounds, registerFailed, fileError
+
 }
 
 extension AppError {
@@ -163,6 +180,7 @@ extension AppError {
         case .netErr(let err): return err.localizedDescription
         case .userNotFounds: return "用户不存在"
         case .registerFailed: return "注册失败"
+        case .fileError: return "文件出错"
         }
     }
 }

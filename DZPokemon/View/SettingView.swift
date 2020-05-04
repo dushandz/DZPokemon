@@ -24,11 +24,11 @@ struct SettingView: View {
     @EnvironmentObject var store: Store
     
     var settingsBinding: Binding<AppState.Settings> {
-        $store.appSate.setting
+        $store.appState.setting
     }
     
     var settings: AppState.Settings {
-        store.appSate.setting
+        store.appState.setting
     }
     
     var body: some View {

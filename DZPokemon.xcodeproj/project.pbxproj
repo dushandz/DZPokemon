@@ -90,6 +90,7 @@
 		58C2C7E9245F20C600E87DE0 /* FileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E8245F20C600E87DE0 /* FileStorage.swift */; };
 		58F7AC70244BF35F00E79F17 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F7AC6F244BF35F00E79F17 /* SettingView.swift */; };
 		58F7AC72244BF37700E79F17 /* SettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F7AC71244BF37700E79F17 /* SettingModel.swift */; };
+		58FA577524605131007911BE /* MainTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FA577424605131007911BE /* MainTab.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -178,6 +179,7 @@
 		58C2C7E8245F20C600E87DE0 /* FileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorage.swift; sourceTree = "<group>"; };
 		58F7AC6F244BF35F00E79F17 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		58F7AC71244BF37700E79F17 /* SettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingModel.swift; sourceTree = "<group>"; };
+		58FA577424605131007911BE /* MainTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTab.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -366,6 +368,7 @@
 				58AA92C1244B3A9D00D33F7E /* PokemonInfoPanel.swift */,
 				58F7AC6F244BF35F00E79F17 /* SettingView.swift */,
 				583DC1BF245EACD500496C11 /* PokemonListView.swift */,
+				58FA577424605131007911BE /* MainTab.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -513,6 +516,7 @@
 			files = (
 				58F7AC72244BF37700E79F17 /* SettingModel.swift in Sources */,
 				583DC1C3245EB38E00496C11 /* AppState.swift in Sources */,
+				58FA577524605131007911BE /* MainTab.swift in Sources */,
 				58AA92B9244B197200D33F7E /* DataModel.swift in Sources */,
 				58F7AC70244BF35F00E79F17 /* SettingView.swift in Sources */,
 				58AA92BD244B276800D33F7E /* Helper.swift in Sources */,

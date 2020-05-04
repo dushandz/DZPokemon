@@ -16,7 +16,7 @@ class Store: ObservableObject {
     }
     
     
-    @Published var appSate = AppState()
+    @Published var appState = AppState()
     
     static func reduce(_ state: AppState, action: AppAction) -> (AppState, AppCommand?) {
         var appState = state
@@ -69,10 +69,16 @@ class Store: ObservableObject {
             appCommand = ClearLocalDataAppCommand()
             
         case .toggleListSelection(let idx):
-            if appState.pokemonList.expanedInex != nil && appState.pokemonList.expanedInex! == idx {
-                appState.pokemonList.expanedInex = nil
+            let expanding = appState.pokemonList.selectionState.expandingIndex
+            if expanding == idx {
+                appState.pokemonList.selectionState.expandingIndex = nil
+                appState.pokemonList.selectionState.panelPresented = false
+                appState.pokemonList.selectionState.radarProgress = 0
             } else {
-                appState.pokemonList.expanedInex = idx
+                appState.pokemonList.selectionState.expandingIndex = idx
+                appState.pokemonList.selectionState.panelIndex = idx
+                appState.pokemonList.selectionState.radarShouldAnimate =
+                    appState.pokemonList.selectionState.radarProgress == 1 ? false : true
             }
             
         case .loadPokemonAbility(let pokemon):
@@ -89,6 +95,9 @@ class Store: ObservableObject {
             case .failure(_):break
                 
             }
+        case .togglePanelPresenting(let show):
+            appState.pokemonList.selectionState.panelPresented = show
+            appState.pokemonList.selectionState.radarProgress = show ? 1 : 0
         }
         return (appState, appCommand)
     }
@@ -97,8 +106,8 @@ class Store: ObservableObject {
         #if DEBUG
         print("[Action]:\(action)")
         #endif
-        let res = Store.reduce(appSate, action: action)
-        appSate = res.0
+        let res = Store.reduce(appState, action: action)
+        appState = res.0
         
         if let command = res.1 {
             print("[Command]:\(command)")
@@ -108,10 +117,10 @@ class Store: ObservableObject {
     }
     
     func setupObservers() {
-        appSate.setting.checker.isEmailValid.sink { (res) in
+        appState.setting.checker.isEmailValid.sink { (res) in
             self.dispatch(.emailValid(valid: res))
         }.store(in: &disposeBag)
-        appSate.setting.checker.isValid.sink { (res) in
+        appState.setting.checker.isValid.sink { (res) in
             self.dispatch(.isInfoValid(valid: res))
         }.store(in: &disposeBag)
     }
