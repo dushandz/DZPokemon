@@ -10,7 +10,15 @@ import Foundation
 
 enum AppAction {
     case login(_ email: String, password: String)
-    case accountBehaviorDone(res: Result<User,AppError>)
+    case accountBehaviorDone(res: Result<User, AppError>)
     case logout
     case emailValid(valid: Bool)
+    case isInfoValid(valid: Bool)
+    case register(_ email: String, password: String)
+    case loadPokemons
+    case loadPokemonsDone(res: Result<[PokemonViewModel], AppError>)
+    case clearLocalData
+    case toggleListSelection(idx: Int?)
+    case loadPokemonAbility(pokemon: Pokemon)
+    case loadPokemonAbilityDone(res: Result<[AbilityViewModel], AppError>)
 }

@@ -60,7 +60,7 @@ struct SettingView: View {
             }
             
 
-            if settings.checker.accountBehavior == .register {
+            if settings.user == nil && settings.checker.accountBehavior == .register {
                 SecureField("确认密码",text: settingsBinding.checker.verifyPassword)
 
             }
@@ -69,9 +69,13 @@ struct SettingView: View {
                 Text("登录中....")
             }
             
-            if settings.user == nil && settings.checker.accountBehavior == .login {
+            if settings.user == nil {
                 Button(settings.checker.accountBehavior.text) {
-                    self.store.dispatch(.login(self.settings.checker.email, password: self.settings.checker.password))
+                    if self.settings.checker.accountBehavior == .login {
+                        self.store.dispatch(.login(self.settings.checker.email, password: self.settings.checker.password))
+                    } else {
+                        self.store.dispatch(.register(self.settings.checker.email, password: self.settings.checker.password))
+                    }
                 }
             }
 

@@ -10,28 +10,40 @@ import SwiftUI
 
 
 struct PokemonRootView: View {
+    @EnvironmentObject var store: Store
     var body: some View {
         NavigationView {
-            PokemonListView().navigationBarTitle("PokemonList")
+            if store.appSate.pokemonList.pokemons == nil {
+                Text("Loading...").onAppear {
+                    self.store.dispatch(.loadPokemons)
+                }
+            } else {
+                PokemonListView().navigationBarTitle("PokemonList")
+            }
         }
     }
 }
 
 struct PokemonListView: View {
-    @State var expanedInex: Int?
-    @State var text = ""
+    @EnvironmentObject var store: Store
+    
+    var expanedInex: Int? {
+        store.appSate.pokemonList.expanedInex
+    }
+    
+    var searchText: Binding<String> {
+        $store.appSate.pokemonList.searchText
+    }
+    
     var body: some View {
         ScrollView {
-            TextField("请输入", text: $text)
-            ForEach(PokemonViewModel.all) { pokemon in
+            TextField("请输入", text: searchText)
+            ForEach(store.appSate.pokemonList.allPokemonsByID) { pokemon in
                 PokemonInfoRow(model: pokemon, expanded: self.expanedInex == pokemon.id)
                     .onTapGesture {
                         withAnimation(.spring(response: 0.55, dampingFraction: 0.425, blendDuration: 0)) {
-                            if self.expanedInex == pokemon.id {
-                                self.expanedInex = nil
-                            } else {
-                                self.expanedInex = pokemon.id
-                            }
+                            self.store.dispatch(.toggleListSelection(idx: pokemon.id))
+                            self.store.dispatch(.loadPokemonAbility(pokemon: pokemon.pokemon))
                         }
                 }
             }
@@ -48,6 +60,6 @@ struct PokemonListView: View {
 
 struct PokemonRootView_Previews: PreviewProvider {
     static var previews: some View {
-        PokemonRootView()
+        PokemonRootView().environmentObject(Store())
     }
 }
