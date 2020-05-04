@@ -36,20 +36,22 @@ struct SettingView: View {
             accountSection
             optionSection
             deleteSection
+        }.alert(item: settingsBinding.loginErr) { (error) in
+            Alert(title: Text(error.localizedDescription))
         }
     }
     
     var accountSection: some View {
         Section(header: Text("账户")) {
-            Picker(selection: settingsBinding.accountBehavior, label: Text("")) {
+            Picker(selection: settingsBinding.checker.accountBehavior, label: Text("")) {
                 ForEach(AppState.Settings.AccountBehavior.allCases, id: \.self) {
                     Text($0.text)
                 }
             }.pickerStyle(SegmentedPickerStyle())
             
             if settings.user == nil {
-                TextField("电子邮箱",text: settingsBinding.email)
-                TextField("密码", text: settingsBinding.password)
+                TextField("电子邮箱",text: settingsBinding.checker.email).foregroundColor(settings.isEmailValid ? .green : .red)
+                TextField("密码", text: settingsBinding.checker.password)
             } else {
                 Text(settings.user!.email)
                 Button("注销") {
@@ -58,8 +60,8 @@ struct SettingView: View {
             }
             
 
-            if settings.accountBehavior == .register {
-                SecureField("确认密码",text: settingsBinding.verifyPassword)
+            if settings.checker.accountBehavior == .register {
+                SecureField("确认密码",text: settingsBinding.checker.verifyPassword)
 
             }
             
@@ -67,9 +69,9 @@ struct SettingView: View {
                 Text("登录中....")
             }
             
-            if settings.user == nil && settings.accountBehavior == .login {
-                Button(settings.accountBehavior.text) {
-                    self.store.dispatch(.login(self.settings.email, password: self.settings.password))
+            if settings.user == nil && settings.checker.accountBehavior == .login {
+                Button(settings.checker.accountBehavior.text) {
+                    self.store.dispatch(.login(self.settings.checker.email, password: self.settings.checker.password))
                 }
             }
 

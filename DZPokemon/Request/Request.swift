@@ -1,5 +1,5 @@
 //
-//  LoginRequest.swift
+//  Request.swift
 //  DZPokemon
 //
 //  Created by dushandz on 2020/5/3.
@@ -21,6 +21,24 @@ struct LoginRequest {
                     promise(.success(user))
                 } else {
                     promise(.failure(AppError.pwdErr))
+                }
+            }
+        }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
+    }
+}
+
+struct EmailCheckingRequest {
+    let email: String
+    
+    var publisher: AnyPublisher<Bool, Never> {
+        Future { promise in
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                if self.email.lowercased() == "dushandz@gmail.com" {
+                    promise(.success(true))
+                } else {
+                    promise(.success(false))
                 }
             }
         }

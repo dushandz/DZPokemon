@@ -85,8 +85,9 @@
 		58AA92BF244B334600D33F7E /* PokemonInfoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AA92BE244B334600D33F7E /* PokemonInfoRow.swift */; };
 		58AA92C2244B3A9D00D33F7E /* PokemonInfoPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AA92C1244B3A9D00D33F7E /* PokemonInfoPanel.swift */; };
 		58C2C7E2245EE21600E87DE0 /* AppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E1245EE21600E87DE0 /* AppAction.swift */; };
-		58C2C7E5245F05C500E87DE0 /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E4245F05C500E87DE0 /* LoginRequest.swift */; };
+		58C2C7E5245F05C500E87DE0 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E4245F05C500E87DE0 /* Request.swift */; };
 		58C2C7E7245F09D100E87DE0 /* AppCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E6245F09D100E87DE0 /* AppCommand.swift */; };
+		58C2C7E9245F20C600E87DE0 /* FileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C2C7E8245F20C600E87DE0 /* FileStorage.swift */; };
 		58F7AC70244BF35F00E79F17 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F7AC6F244BF35F00E79F17 /* SettingView.swift */; };
 		58F7AC72244BF37700E79F17 /* SettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F7AC71244BF37700E79F17 /* SettingModel.swift */; };
 /* End PBXBuildFile section */
@@ -172,8 +173,9 @@
 		58AA92BE244B334600D33F7E /* PokemonInfoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonInfoRow.swift; sourceTree = "<group>"; };
 		58AA92C1244B3A9D00D33F7E /* PokemonInfoPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonInfoPanel.swift; sourceTree = "<group>"; };
 		58C2C7E1245EE21600E87DE0 /* AppAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAction.swift; sourceTree = "<group>"; };
-		58C2C7E4245F05C500E87DE0 /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		58C2C7E4245F05C500E87DE0 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		58C2C7E6245F09D100E87DE0 /* AppCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommand.swift; sourceTree = "<group>"; };
+		58C2C7E8245F20C600E87DE0 /* FileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorage.swift; sourceTree = "<group>"; };
 		58F7AC6F244BF35F00E79F17 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		58F7AC71244BF37700E79F17 /* SettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -258,6 +260,7 @@
 			children = (
 				58015AEA2448A6EE00710539 /* FileHelper.swift */,
 				58AA92BC244B276800D33F7E /* Helper.swift */,
+				58C2C7E8245F20C600E87DE0 /* FileStorage.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -370,7 +373,7 @@
 		58C2C7E3245F05B300E87DE0 /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				58C2C7E4245F05C500E87DE0 /* LoginRequest.swift */,
+				58C2C7E4245F05C500E87DE0 /* Request.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -519,12 +522,13 @@
 				58C2C7E2245EE21600E87DE0 /* AppAction.swift in Sources */,
 				583DC1C5245EB44400496C11 /* Store.swift in Sources */,
 				58015A572448A62500710539 /* SceneDelegate.swift in Sources */,
+				58C2C7E9245F20C600E87DE0 /* FileStorage.swift in Sources */,
 				58AA92BF244B334600D33F7E /* PokemonInfoRow.swift in Sources */,
 				58015A592448A62500710539 /* ContentView.swift in Sources */,
 				58AA92BB244B272700D33F7E /* ViewModel.swift in Sources */,
 				58AA92C2244B3A9D00D33F7E /* PokemonInfoPanel.swift in Sources */,
 				58015AEB2448A6EE00710539 /* FileHelper.swift in Sources */,
-				58C2C7E5245F05C500E87DE0 /* LoginRequest.swift in Sources */,
+				58C2C7E5245F05C500E87DE0 /* Request.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

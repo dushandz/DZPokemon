@@ -9,6 +9,12 @@
 import Combine
 
 class Store: ObservableObject {
+    var disposeBag = [AnyCancellable]()
+    
+    init() {
+        setupObservers()
+    }
+    
     
     @Published var appSate = AppState()
     
@@ -21,18 +27,19 @@ class Store: ObservableObject {
                 break
             }
             appSate.setting.isRequestLogin = true
-            if pwd == "pwd" {
-                appCommand = LoginAppCommand(email: email, password: pwd)
-            }
+            appCommand = LoginAppCommand(email: email, password: pwd)
         case .accountBehaviorDone(let res):
             appSate.setting.isRequestLogin = false
             switch res {
             case .success(let user):
                 appSate.setting.user = user
-            case .failure(let error): break
+            case .failure(let error):
+                appSate.setting.loginErr = error
             }
         case .logout:
             appSate.setting.user = nil
+        case .emailValid(let isEmailValid):
+            appSate.setting.isEmailValid = isEmailValid
         }
         return (appSate, appCommand)
     }
@@ -49,5 +56,11 @@ class Store: ObservableObject {
             command.execute(in: self)
         }
         
+    }
+    
+    func setupObservers() {
+        appSate.setting.checker.isEmailValid.sink { (res) in
+            self.dispatch(.emailValid(valid: res))
+        }.store(in: &disposeBag)
     }
 }

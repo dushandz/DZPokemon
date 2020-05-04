@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Combine
+
 
 struct AppState {
     var setting = Settings()
@@ -16,25 +18,56 @@ struct AppState {
 extension AppState {
     struct Settings {
         
-        enum Sorting: CaseIterable {
+        enum Sorting: String, Codable, CaseIterable {
             case id, name, color, favorite
         }
+        @UserDefaultsStorage(initialValue: false, keyName: "showEnglishName")
+        var showEnglishName
         
-        var showEnglishName = true
-        var sorting = Sorting.id
-        var showFavoriteOnly = false
+        @UserDefaultsStorage(initialValue: Sorting.id, keyName: "sorting")
+        var sorting
+        
+        @UserDefaultsStorage(initialValue: false, keyName: "showEnglishName")
+        var showFavoriteOnly
         
         enum AccountBehavior: CaseIterable {
             case register, login
         }
         
-        var accountBehavior = AccountBehavior.login
-        var email = ""
-        var password = ""
-        var verifyPassword = ""
         var isRequestLogin = false
+        var loginErr: AppError?
         
+        @FileStorage(directory: .documentDirectory, fileName: "user.json")
         var user: User?
+        
+        var isEmailValid = false
+        
+        class AccountChecker {
+            @Published var accountBehavior = AccountBehavior.login
+            @Published var email = ""
+            @Published var password = ""
+            @Published var verifyPassword = ""
+            
+            var isEmailValid: AnyPublisher<Bool, Never> {
+                let remoteVerify = $email.debounce(for: .milliseconds(500), scheduler: DispatchQueue.main).removeDuplicates().flatMap { email -> AnyPublisher<Bool, Never> in
+                    let isValid = email.isValidEmailAddress
+                    let canSkip = self.accountBehavior == .login
+                    switch(isValid, canSkip) {
+                    case(false, _):
+                        return Just(false).eraseToAnyPublisher()
+                    case (true, false):
+                        return EmailCheckingRequest(email: email).publisher
+                    case (true, true):
+                        return Just(true).eraseToAnyPublisher()
+                    }
+                }
+                let emailLocalValid = $email.map{$0.isValidEmailAddress}
+                let canSkip = $accountBehavior.map{$0 == .login}
+                
+                return Publishers.CombineLatest3(remoteVerify, emailLocalValid, canSkip).map{$0 && ($1 || $2) }.eraseToAnyPublisher()
+            }
+        }
+        var checker = AccountChecker()
     }
 }
 

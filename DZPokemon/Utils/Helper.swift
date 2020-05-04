@@ -14,6 +14,12 @@ let appDecoder: JSONDecoder = {
     return decoder
 }()
 
+let appEncoder: JSONEncoder = {
+    let encoder = JSONEncoder()
+    encoder.keyEncodingStrategy = .convertToSnakeCase
+    return encoder
+}()
+
 
 extension Color {
     init(hex: Int, alpha: Double = 1) {
